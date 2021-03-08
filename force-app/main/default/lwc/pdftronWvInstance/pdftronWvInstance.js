@@ -1,11 +1,11 @@
-import { LightningElement, wire, track, api } from 'lwc';
-import { CurrentPageReference } from 'lightning/navigation';
-import { loadScript } from 'lightning/platformResourceLoader';
-import libUrl from '@salesforce/resourceUrl/lib';
-import myfilesUrl from '@salesforce/resourceUrl/myfiles';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import mimeTypes from './mimeTypes'
-import { registerListener, unregisterAllListeners } from 'c/pubsub';
+import { LightningElement, wire, track, api } from "lwc";
+import { CurrentPageReference } from "lightning/navigation";
+import { loadScript } from "lightning/platformResourceLoader";
+import libUrl from "@salesforce/resourceUrl/lib";
+import myfilesUrl from "@salesforce/resourceUrl/myfiles";
+import { ShowToastEvent } from "lightning/platformShowToastEvent";
+import mimeTypes from "./mimeTypes";
+import { registerListener, unregisterAllListeners } from "c/pubsub";
 
 function _base64ToArrayBuffer(base64) {
   var binary_string = window.atob(base64);
@@ -18,7 +18,7 @@ function _base64ToArrayBuffer(base64) {
 }
 
 export default class PdftronWvInstance extends LightningElement {
-  source = 'My file';
+  source = "My file";
   fullAPI = true;
   @api recordId;
   account;
@@ -27,26 +27,30 @@ export default class PdftronWvInstance extends LightningElement {
   pageRef;
 
   connectedCallback() {
-    registerListener('blobSelected', this.handleBlobSelected, this);
-    window.addEventListener('message', this.handleReceiveMessage.bind(this), false);
+    registerListener("blobSelected", this.handleBlobSelected, this);
+    window.addEventListener(
+      "message",
+      this.handleReceiveMessage.bind(this),
+      false
+    );
   }
 
   disconnectedCallback() {
     unregisterAllListeners(this);
-    window.removeEventListener('message', this.handleReceiveMessage, true);
+    window.removeEventListener("message", this.handleReceiveMessage, true);
   }
 
   handleAccountData(account) {
     account = JSON.parse(account);
     const payload = account;
-    this.iframeWindow.postMessage({ type: 'SHOW_ACCOUNT_DATA', payload }, '*');
+    this.iframeWindow.postMessage({ type: "SHOW_ACCOUNT_DATA", payload }, "*");
   }
 
   handleBlobSelected(record) {
     record = JSON.parse(record);
 
     let blobby = new Blob([_base64ToArrayBuffer(record.body)], {
-      type: mimeTypes[record.FileExtension]
+      type: mimeTypes[record.FileExtension],
     });
 
     const payload = {
@@ -54,9 +58,9 @@ export default class PdftronWvInstance extends LightningElement {
       extension: record.cv.FileExtension,
       filename: record.cv.Title + "." + record.cv.FileExtension,
       documentId: record.cv.Id,
-      account: record.acc
+      account: record.acc,
     };
-    this.iframeWindow.postMessage({ type: 'OPEN_DOCUMENT_BLOB', payload }, '*');
+    this.iframeWindow.postMessage({ type: "OPEN_DOCUMENT_BLOB", payload }, "*");
   }
 
   renderedCallback() {
@@ -67,8 +71,8 @@ export default class PdftronWvInstance extends LightningElement {
     this.uiInitialized = true;
 
     Promise.all([
-      loadScript(self, libUrl + '/webviewer.min.js'),
-      loadScript(self, myfilesUrl + '/main.js')
+      loadScript(self, libUrl + "/webviewer.min.js"),
+      loadScript(self, myfilesUrl + "/main.js"),
     ])
       .then(() => this.initUI())
       .catch(console.error);
@@ -78,57 +82,46 @@ export default class PdftronWvInstance extends LightningElement {
     var myObj = {
       libUrl: libUrl,
       fullAPI: false,
-      namespacePrefix: '',
+      namespacePrefix: "",
     };
     //var url = myfilesUrl + '/webviewer-demo-annotated.pdf';
 
-    const viewerElement = this.template.querySelector('div')
+    const viewerElement = this.template.querySelector("div");
     // eslint-disable-next-line no-unused-vars
     const viewer = new PDFTron.WebViewer(
       {
         path: libUrl,
         custom: JSON.stringify(myObj),
-        config: myfilesUrl + '/config_apex.js',
-        css: myfilesUrl + '/styles.css',
+        config: myfilesUrl + "/config_apex.js",
+        css: myfilesUrl + "/styles.css",
         selectAnnotationOnCreation: true,
-        disabledElements: [
-          'searchButton',
-          'pageNavOverlay',
-          'viewControlsButton',
-          'panToolButton',
-          'underlineToolGroupButton',
-          'strikeoutToolGroupButton',
-          'highlightToolGroupButton',
-          'squigglyToolGroupButton',
-          'signatureToolButton',
-          'leftPanel',
-          'leftPanelButton',
-          'toolbarGroup-Edit',
-          'themeChangeButton',
-          'fullscreenButton',
-          'menuButton',
-          'annotationCommentButton',
-          'toggleNotesButton',
-          'annotationNoteConnectorLine',
-          'toolbarGroup-Measure'
-        ],
-      }, viewerElement);
+      },
+      viewerElement
+    );
 
-    viewerElement.addEventListener('ready', async () => {
-      this.iframeWindow = viewerElement.querySelector('iframe').contentWindow;
+    viewerElement.addEventListener("ready", async () => {
+      this.iframeWindow = viewerElement.querySelector("iframe").contentWindow;
     });
   }
 
   handleReceiveMessage(event) {
     const me = this;
-    if (event.isTrusted && typeof event.data === 'object') {
+    if (event.isTrusted && typeof event.data === "object") {
       switch (event.data.type) {
-        case 'SAVE_DOCUMENT':
-          saveDocument({ json: JSON.stringify(event.data.payload), recordId: this.recordId }).then((response) => {
-            me.iframeWindow.postMessage({ type: 'DOCUMENT_SAVED', response }, '*')
-          }).catch(error => {
-            console.error(JSON.stringify(error));
-          });
+        case "SAVE_DOCUMENT":
+          saveDocument({
+            json: JSON.stringify(event.data.payload),
+            recordId: this.recordId,
+          })
+            .then((response) => {
+              me.iframeWindow.postMessage(
+                { type: "DOCUMENT_SAVED", response },
+                "*"
+              );
+            })
+            .catch((error) => {
+              console.error(JSON.stringify(error));
+            });
           break;
         default:
           break;
@@ -138,6 +131,6 @@ export default class PdftronWvInstance extends LightningElement {
 
   @api
   closeDocument() {
-    this.iframeWindow.postMessage({ type: 'CLOSE_DOCUMENT' }, '*')
+    this.iframeWindow.postMessage({ type: "CLOSE_DOCUMENT" }, "*");
   }
 }
