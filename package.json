@@ -13,7 +13,9 @@
     "test:unit:debug": "sfdx-lwc-jest --debug",
     "test:unit:coverage": "sfdx-lwc-jest --coverage",
     "prettier": "prettier --write \"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"",
-    "prettier:verify": "prettier --list-different \"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\""
+    "prettier:verify": "prettier --list-different \"**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}\"",
+    "move-static": "cp -a ./node_modules/@pdftron/webviewer-video/dist/. ./force-app/main/default/staticresources/myfiles",
+    "postinstall": "npm run move-static"
   },
   "devDependencies": {
     "@prettier/plugin-xml": "^0.12.0",
@@ -39,5 +41,8 @@
     "**/{aura|lwc}/**": [
       "eslint"
     ]
+  },
+  "dependencies": {
+    "@pdftron/webviewer-video": "^3.5.0"
   }
 }
