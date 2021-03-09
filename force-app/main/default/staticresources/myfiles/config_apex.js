@@ -7,7 +7,12 @@ resourceURL = resourceURL + custom.namespacePrefix;
 
 var script = document.createElement('script');
 script.type = 'text/javascript';
+
+// @TODO
+// update '/1614618671000/' timestamp to work with your org
+// use relative path to your main.js file hosted in your static resources
 script.src = '/resource/1614618671000/myfiles/main.js';
+
 document.head.appendChild(script);
 
 var onLoadPromise = new Promise(function (resolve) {
