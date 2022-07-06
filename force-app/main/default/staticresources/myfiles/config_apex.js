@@ -16,7 +16,7 @@ videoMain.src = custom.path + '/main-with-react.js';
 document.head.appendChild(videoMain);
 
 var onLoadPromise = new Promise(function (resolve) {
-  react.onload = function () {
+  videoMain.onload = function () {
     resolve();
   }
 });
