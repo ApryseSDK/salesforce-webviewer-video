@@ -3,7 +3,8 @@ window.Core.forceBackendType('ems');
 
 var urlSearch = new URLSearchParams(location.hash)
 var custom = JSON.parse(urlSearch.get('custom'));
-resourceURL = resourceURL + custom.namespacePrefix;
+resourceURL = resourceURL + custom.namespacePrefix + 'V87';
+
 
 // var script = document.createElement('script');
 // script.type = 'text/javascript';
@@ -12,7 +13,7 @@ resourceURL = resourceURL + custom.namespacePrefix;
 
 var videoMain = document.createElement('script');
 videoMain.type = 'text/javascript';
-videoMain.src = custom.path + '/main-with-react.js';
+videoMain.src = custom.myfiles + '/main-with-reac.js';
 document.head.appendChild(videoMain);
 
 var onLoadPromise = new Promise(function (resolve) {
@@ -141,7 +142,7 @@ window.addEventListener('viewerLoaded', async function () {
   const annotationManager = await instance.Core.documentViewer.getAnnotationManager();
 
   onLoadPromise
-    .then(function () {
+    .then(async () => {
       var customContainer = window.document.querySelector('.custom-container');
 
       instance.openElements('notesPanel');
@@ -149,8 +150,10 @@ window.addEventListener('viewerLoaded', async function () {
 
       instance.iframeWindow = window;
 
-      console.log(instance);
-      console.log(instance.iframeWindow);
+      // console.log(instance);
+      // console.log(instance.iframeWindow);
+
+      
 
       window.WebViewerVideo.initializeVideoViewer(instance)
         .then(({ loadVideo }) => {

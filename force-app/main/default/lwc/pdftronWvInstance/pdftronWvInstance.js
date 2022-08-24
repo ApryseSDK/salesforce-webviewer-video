@@ -1,14 +1,13 @@
 import { LightningElement, wire, track, api } from "lwc";
 import { CurrentPageReference } from "lightning/navigation";
 import { loadScript } from "lightning/platformResourceLoader";
-import libUrl from "@salesforce/resourceUrl/lib";
+import libUrl from "@salesforce/resourceUrl/V87lib";
 import myfilesUrl from "@salesforce/resourceUrl/myfiles";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import mimeTypes from "./mimeTypes";
 import { fireEvent, registerListener, unregisterAllListeners } from "c/pubsub";
 import saveDocument from "@salesforce/apex/PDFTron_ContentVersionController.saveDocument";
 import getUser from "@salesforce/apex/PDFTron_ContentVersionController.getUser";
-import getResourceURL from "@salesforce/apex/PDFTron_ContentVersionController.getResourceURL";
 
 function _base64ToArrayBuffer(base64) {
   var binary_string = window.atob(base64);
@@ -90,14 +89,14 @@ export default class PdftronWvInstance extends LightningElement {
   }
 
   async initUI() {
-    let path = await getResourceURL({resourceName: 'myfiles'});
     var myObj = {
       libUrl: libUrl,
       fullAPI: this.fullAPI || false,
       namespacePrefix: "",
       username: this.username,
-      path: path
+      myfiles: myfilesUrl
     };
+    
     var url = myfilesUrl + "/webviewer-demo-annotated.pdf";
 
     const viewerElement = this.template.querySelector("div");
@@ -113,16 +112,12 @@ export default class PdftronWvInstance extends LightningElement {
         enableFilePicker: this.enableFilePicker,
         enableRedaction: this.enableRedaction,
         enableMeasurement: this.enableMeasurement,
+        enableOptimizedWorkers: false
         // selectAnnotationOnCreation: true,
-        webviewerServerURL: 'http://ec2-54-221-147-89.compute-1.amazonaws.com:8090/demo/)',
-        l: 'Questline Inc. (questline.com):ENTERP:eClouds Milestones::B+:AMS(20230612):D5A56AFD0437060AF360B13AC982537820610F9B99481E259BADB48AED3C30B042D431F5C7'
       },
       viewerElement
     );
 
-    viewer.then(result => {
-      console.log(result)
-    })
 
     viewerElement.addEventListener("ready", () => {
       this.iframeWindow = viewerElement.querySelector("iframe").contentWindow;
