@@ -13,7 +13,7 @@ resourceURL = resourceURL + custom.namespacePrefix + 'V87';
 
 var videoMain = document.createElement('script');
 videoMain.type = 'text/javascript';
-videoMain.src = custom.myfiles + '/main-with-reac.js';
+videoMain.src = custom.myfiles + '/main-with-react.js';
 document.head.appendChild(videoMain);
 
 var onLoadPromise = new Promise(function (resolve) {
