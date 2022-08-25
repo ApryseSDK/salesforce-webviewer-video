@@ -43,6 +43,6 @@
     ]
   },
   "dependencies": {
-    "@pdftron/webviewer-video": "^4.24.0"
+    "@pdftron/webviewer-video": "^4.24.1"
   }
 }
