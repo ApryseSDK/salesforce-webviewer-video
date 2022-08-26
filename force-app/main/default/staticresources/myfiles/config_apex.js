@@ -13,7 +13,7 @@ resourceURL = resourceURL + custom.namespacePrefix + 'V87';
 
 var videoMain = document.createElement('script');
 videoMain.type = 'text/javascript';
-videoMain.src = custom.myfiles + '/main-with-react.js';
+videoMain.src = '../../myfiles/main-with-react.js';
 document.head.appendChild(videoMain);
 
 var onLoadPromise = new Promise(function (resolve) {
@@ -157,7 +157,7 @@ window.addEventListener('viewerLoaded', async function () {
 
       window.WebViewerVideo.initializeVideoViewer(instance)
         .then(({ loadVideo }) => {
-          const videoUrl = 'https://pdftron.s3.amazonaws.com/downloads/pl/video/video.mp4';
+          const videoUrl = 'https://sf-webviewer.s3.ca-central-1.amazonaws.com/GETTINGSMARTERevcharger220408+(1)+(3).mp4';
           loadVideo(videoUrl);
 
           // instance.docViewer.on('documentLoaded', () => {
